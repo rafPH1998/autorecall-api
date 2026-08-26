@@ -1,0 +1,16 @@
+.docker
+.git
+.gitignore
+.env
+.env.*
+node_modules
+public/build
+public/hot
+public/storage
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+Dockerfile
+docker-compose.yml
+README.md

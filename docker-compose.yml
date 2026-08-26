@@ -1,0 +1,50 @@
+services:
+    # image project
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                uid: ${DOCKER_UID:-1000}
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - db
+        networks:
+            - laravel
+
+    # nginx
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - "8008:80"
+        volumes:
+            - ./:/var/www
+            - ./.docker/nginx/:/etc/nginx/conf.d/
+        depends_on:
+            - app
+        networks:
+            - laravel
+
+    # db mysql
+    db:
+        image: mysql:5.7.22
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
+            MYSQL_USER: ${DB_USERNAME:-username}
+        volumes:
+            - ./.docker/mysql/dbdata:/var/lib/mysql
+        ports:
+            - "3009:3306"
+        networks:
+            - laravel
+
+networks:
+    laravel:
+        driver: bridge
