@@ -20,6 +20,7 @@ class WorkshopSeeder extends Seeder
             'contact_reminders' => true,
             'weekly_report' => false,
             'default_reminder_days' => 15,
+            'whatsapp_template' => \App\Support\WhatsApp::DEFAULT_TEMPLATE,
         ]);
     }
 }

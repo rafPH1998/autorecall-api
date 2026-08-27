@@ -19,6 +19,10 @@ class NotificationResource extends JsonResource
             'description' => $this->description,
             'date' => Dates::formatWhen($this->created_at),
             'type' => $this->type,
+            'channel' => $this->channel ?? 'in_app',
+            'sendStatus' => $this->send_status ?? 'sent',
+            'scheduledAt' => $this->scheduled_at,
+            'sentAt' => $this->sent_at,
             'read' => (bool) $this->read,
         ];
     }

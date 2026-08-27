@@ -15,6 +15,13 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    public function isAdministrator(): bool
+    {
+        $role = mb_strtolower(trim((string) $this->role));
+
+        return in_array($role, ['administrador', 'admin', 'owner'], true);
+    }
+
     protected function casts(): array
     {
         return [

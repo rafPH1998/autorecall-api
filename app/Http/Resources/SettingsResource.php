@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Models\Workshop;
+use App\Support\WhatsApp;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -31,6 +32,7 @@ class SettingsResource extends JsonResource
                 'contactReminders' => (bool) $this->contact_reminders,
                 'weeklyReport' => (bool) $this->weekly_report,
                 'defaultReminderDays' => $this->default_reminder_days,
+                'whatsappTemplate' => $this->whatsapp_template ?: WhatsApp::DEFAULT_TEMPLATE,
             ],
         ];
     }

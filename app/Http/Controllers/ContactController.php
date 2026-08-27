@@ -15,7 +15,7 @@ class ContactController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        return ContactResource::collection(Contact::query()->orderByDesc('id')->get());
+        return ContactResource::collection(Contact::query()->with('customer')->orderByDesc('id')->get());
     }
 
     public function store(Request $request): ContactResource
@@ -48,6 +48,6 @@ class ContactController extends Controller
             'read' => false,
         ]);
 
-        return new ContactResource($contact);
+        return new ContactResource($contact->load('customer'));
     }
 }

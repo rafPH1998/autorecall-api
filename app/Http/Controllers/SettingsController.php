@@ -37,6 +37,7 @@ class SettingsController extends Controller
             'preferences.contactReminders' => ['required', 'boolean'],
             'preferences.weeklyReport' => ['required', 'boolean'],
             'preferences.defaultReminderDays' => ['required', 'integer'],
+            'preferences.whatsappTemplate' => ['nullable', 'string'],
         ]);
 
         $this->settings->save($data, $request->user()->id);

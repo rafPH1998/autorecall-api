@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
@@ -13,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => 'Hello World!');
 
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:5,1');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
@@ -43,10 +45,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/contacts', [ContactController::class, 'index']);
     Route::post('/contacts', [ContactController::class, 'store']);
 
+    Route::get('/campaigns/candidates', [CampaignController::class, 'candidates']);
+    Route::get('/campaigns', [CampaignController::class, 'index']);
+    Route::post('/campaigns', [CampaignController::class, 'store']);
+
+    Route::get('/dashboard', [MetricsController::class, 'dashboard']);
+    Route::get('/reports', [MetricsController::class, 'reports']);
+    Route::post('/whatsapp/preview', [MetricsController::class, 'whatsappPreview']);
+
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
 
     Route::get('/settings', [SettingsController::class, 'show']);
-    Route::put('/settings', [SettingsController::class, 'update']);
+    Route::put('/settings', [SettingsController::class, 'update'])->middleware('admin');
 });

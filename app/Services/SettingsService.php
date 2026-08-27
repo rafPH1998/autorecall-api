@@ -30,6 +30,7 @@ class SettingsService
             'contact_reminders' => $dto['preferences']['contactReminders'],
             'weekly_report' => $dto['preferences']['weeklyReport'],
             'default_reminder_days' => $dto['preferences']['defaultReminderDays'],
+            'whatsapp_template' => $dto['preferences']['whatsappTemplate'] ?? $workshop->whatsapp_template,
         ])->save();
 
         $keepIds = [$currentUserId];

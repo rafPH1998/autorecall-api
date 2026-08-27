@@ -8,14 +8,39 @@ use App\Models\Vehicle;
 use App\Support\Dates;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VehicleController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection|array
     {
-        return VehicleResource::collection(Vehicle::query()->orderBy('plate')->get());
+        $query = Vehicle::query()->orderBy('plate');
+        $q = trim((string) $request->query('q', ''));
+        if ($q !== '') {
+            $like = '%'.addcslashes($q, '%_\\').'%';
+            $query->where(function ($inner) use ($like) {
+                $inner->where('plate', 'like', $like)
+                    ->orWhere('brand', 'like', $like)
+                    ->orWhere('model', 'like', $like);
+            });
+        }
+
+        if ($request->filled('perPage')) {
+            $perPage = min(100, max(1, (int) $request->query('perPage', 15)));
+            $page = max(1, (int) $request->query('page', 1));
+            $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+
+            return [
+                'items' => VehicleResource::collection($paginator->getCollection()),
+                'total' => $paginator->total(),
+                'page' => $paginator->currentPage(),
+                'perPage' => $paginator->perPage(),
+            ];
+        }
+
+        return VehicleResource::collection($query->get());
     }
 
     public function show(int $id): VehicleResource
@@ -48,7 +73,7 @@ class VehicleController extends Controller
     {
         $data = $request->validate([
             'customerId' => ['required', 'integer'],
-            'plate' => ['required', 'string'],
+            'plate' => ['required', 'string', Rule::unique('vehicles', 'plate')->ignore($request->route('id'))],
             'brand' => ['required', 'string'],
             'model' => ['required', 'string'],
             'year' => ['required', 'integer'],

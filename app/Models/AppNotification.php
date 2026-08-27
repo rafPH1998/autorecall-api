@@ -14,6 +14,11 @@ class AppNotification extends Model
         'title',
         'description',
         'type',
+        'source',
+        'channel',
+        'send_status',
+        'scheduled_at',
+        'sent_at',
         'read',
     ];
 
@@ -22,6 +27,8 @@ class AppNotification extends Model
         return [
             'read' => 'boolean',
             'created_at' => 'datetime',
+            'scheduled_at' => 'datetime',
+            'sent_at' => 'datetime',
         ];
     }
 }

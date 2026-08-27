@@ -19,6 +19,7 @@ class Workshop extends Model
         'contact_reminders',
         'weekly_report',
         'default_reminder_days',
+        'whatsapp_template',
     ];
 
     protected function casts(): array

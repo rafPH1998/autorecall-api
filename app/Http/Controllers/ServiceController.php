@@ -37,8 +37,8 @@ class ServiceController extends Controller
             'name' => ['required', 'string'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'intervalMonths' => ['nullable', 'integer'],
-            'intervalMileage' => ['nullable', 'integer'],
+            'intervalMonths' => ['nullable', 'integer', 'min:1'],
+            'intervalMileage' => ['nullable', 'integer', 'min:1'],
             'active' => ['nullable', 'boolean'],
         ]);
 

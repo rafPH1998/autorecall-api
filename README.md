@@ -30,6 +30,20 @@ php artisan serve --port=3000
 
 O front em `http://localhost:5173` encaminha `/api` para essa porta.
 
+## Job diário de manutenções
+
+Classifica manutenções em **Próxima** / **Atrasada** (data ou quilometragem), atualiza o veículo e cria notificações sem duplicar.
+
+```bash
+php artisan maintenances:check
+```
+
+O Scheduler roda o comando todos os dias às 06:00 (America/Sao_Paulo). No servidor:
+
+```bash
+* * * * * cd /caminho/da/api && php artisan schedule:run >> /dev/null 2>&1
+```
+
 Rotas (Bearer, exceto login e hello):
 
 - `POST /auth/login`, `GET /auth/me`
@@ -40,4 +54,7 @@ Rotas (Bearer, exceto login e hello):
 - `GET /maintenances`
 - `GET|POST /contacts`
 - `GET /notifications`, `POST /notifications/:id/read`, `POST /notifications/read-all`
-- `GET|PUT /settings`
+- `GET|PUT /settings` (PUT só administrador)
+- `GET /dashboard`, `GET /reports`
+- `GET /campaigns`, `GET /campaigns/candidates`, `POST /campaigns`
+- `POST /whatsapp/preview`

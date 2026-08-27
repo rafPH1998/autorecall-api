@@ -15,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: '',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // API usa Bearer (Sanctum token), sem cookie/CSRF.
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureAdministrator::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn () => true);
